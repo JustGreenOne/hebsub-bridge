@@ -53,6 +53,28 @@ describe('HebSubEngine', () => {
     expect(result.results).toEqual([]);
   });
 
+  it('findSubtitle returns downloaded subtitle for top result', async () => {
+    const downloaded = {
+      providerId: 'a', subtitleId: 'a1', originalPath: '/tmp/a.srt',
+      normalizedPath: '/tmp/a.srt', format: 'srt' as const, encoding: 'utf-8' as const, cacheKey: '',
+    };
+    fs.writeFileSync('/tmp/a.srt', 'test');
+    const p = makeProvider('a', [{ subtitleId: 'a1', imdbId: 'tt777' }]);
+    (p.download as ReturnType<typeof vi.fn>).mockResolvedValue(downloaded);
+    const engine = new HebSubEngine(tmpDir);
+    const result = await engine.findSubtitle({ type: 'movie', language: 'heb', imdbId: 'tt777' }, [p]);
+    expect(result).not.toBeNull();
+    expect(result?.subtitleId).toBe('a1');
+    expect(p.download).toHaveBeenCalledTimes(1);
+  });
+
+  it('findSubtitle returns null when no providers find anything', async () => {
+    const p = makeProvider('empty', []);
+    const engine = new HebSubEngine(tmpDir);
+    const result = await engine.findSubtitle({ type: 'movie', language: 'heb' }, [p]);
+    expect(result).toBeNull();
+  });
+
   it('uses cache on second call with same key', async () => {
     const engine = new HebSubEngine(tmpDir);
     // populate cache manually
