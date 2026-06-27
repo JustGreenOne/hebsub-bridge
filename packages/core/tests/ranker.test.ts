@@ -49,6 +49,13 @@ describe('rankResults', () => {
     expect(ranked[0].subtitleId).toBe('good');
   });
 
+  it('penalises wrong imdbId -70', () => {
+    const wrongId = { ...base, title: 'Something Else', imdbId: 'tt9999999' };
+    const ranked = rankResults([wrongId], input);
+    expect(ranked[0].score).toBeLessThan(0);
+    expect(ranked[0].warnings).toContain('wrong imdbId');
+  });
+
   it('includes reasons array in output', () => {
     const ranked = rankResults([{ ...base, imdbId: 'tt0903747' }], input);
     expect(Array.isArray(ranked[0].reasons)).toBe(true);

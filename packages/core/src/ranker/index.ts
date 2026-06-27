@@ -14,11 +14,19 @@ function score(r: SubtitleSearchResult, input: SubtitleSearchInput): RankedSubti
   const reasons: string[] = [];
   const warnings: string[] = [];
 
-  if (input.imdbId && r.imdbId === input.imdbId) {
-    s += 120; reasons.push('exact imdbId match');
+  if (input.imdbId && r.imdbId) {
+    if (r.imdbId === input.imdbId) {
+      s += 120; reasons.push('exact imdbId match');
+    } else {
+      s -= 70; warnings.push('wrong imdbId');
+    }
   }
-  if (input.tmdbId && r.tmdbId === input.tmdbId) {
-    s += 100; reasons.push('exact tmdbId match');
+  if (input.tmdbId && r.tmdbId) {
+    if (r.tmdbId === input.tmdbId) {
+      s += 100; reasons.push('exact tmdbId match');
+    } else {
+      s -= 70; warnings.push('wrong tmdbId');
+    }
   }
   if (input.type === 'series' && input.season !== undefined && input.episode !== undefined) {
     if (r.season === input.season && r.episode === input.episode) {
