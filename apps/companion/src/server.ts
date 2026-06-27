@@ -1,5 +1,11 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import type { HebSubSettings } from '@hebsub/core';
+import healthRoute from './api/health.js';
+import settingsRoute from './api/settings.js';
+import logsRoute, { addLog } from './api/logs.js';
+
+// Re-export addLog so other modules can push entries to the ring buffer.
+export { addLog };
 
 /**
  * Build and configure the Fastify app instance.
@@ -34,11 +40,10 @@ export async function buildServer(settings: HebSubSettings): Promise<FastifyInst
     }
   });
 
-  // Health check
-  app.get('/health', async () => ({ status: 'ok', version: '0.1.0' }));
-
-  // Settings read-only endpoint
-  app.get('/settings', async () => settings);
+  // Register route modules
+  await app.register(healthRoute);
+  await app.register(settingsRoute);
+  await app.register(logsRoute);
 
   // Stub for /play — full implementation in a later task
   app.post('/play', async (_req, reply) => {
