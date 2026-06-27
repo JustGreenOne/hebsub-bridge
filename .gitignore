@@ -6,6 +6,8 @@ build/
 .env
 .env.local
 *.env
-cache/
+# Ignore cache data directories but not source folders named 'cache'
+**/cache/subtitles/
+HebSubBridge/
 *.log
 .DS_Store
