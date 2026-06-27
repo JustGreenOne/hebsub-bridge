@@ -18,7 +18,7 @@ const mockSearchResponse = {
       release_name: 'Breaking.Bad.S01E02.1080p',
       season: 1,
       episode: 2,
-      imdb_id: 'tt0903747',
+      imdb_id: '0903747',
       downloads: 5000,
       hi: false,
       url: '/subtitles/breaking-bad-s01e02.zip',
@@ -56,9 +56,17 @@ describe('SubDLProvider', () => {
     expect(results).toHaveLength(1);
     expect(results[0].providerId).toBe('subdl');
     expect(results[0].subtitleId).toBe('123456');
+    expect(results[0].imdbId).toBe('tt0903747');
     expect(results[0].season).toBe(1);
     expect(results[0].episode).toBe(2);
     expect(results[0].downloads).toBe(5000);
+  });
+
+  it('returns empty array when no API key', async () => {
+    const p = new SubDLProvider('');
+    const results = await p.search({ type: 'movie', language: 'heb', imdbId: 'tt1234567' });
+    expect(results).toEqual([]);
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 
   it('returns empty array when API returns no subtitles', async () => {
