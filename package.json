@@ -1,0 +1,21 @@
+{
+  "name": "hebsub-bridge",
+  "private": true,
+  "version": "0.1.0",
+  "engines": { "node": ">=16.14", "pnpm": ">=8" },
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev:companion": "turbo run dev --filter=@hebsub/companion",
+    "dev:cli": "turbo run dev --filter=@hebsub/cli"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.4",
+    "typescript": "^5.4.5",
+    "prettier": "^3.2.5",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0"
+  }
+}
