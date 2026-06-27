@@ -1,0 +1,23 @@
+{
+  "name": "@hebsub/core",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.6.3",
+    "jschardet": "^3.0.0",
+    "decompress": "^4.2.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/decompress": "^4.2.7",
+    "vitest": "^1.5.3"
+  }
+}
