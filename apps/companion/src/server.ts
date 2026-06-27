@@ -5,6 +5,7 @@ import settingsRoute from './api/settings.js';
 import logsRoute, { addLog } from './api/logs.js';
 import searchRoute from './api/search.js';
 import playRoute from './api/play.js';
+import downloadRoute from './api/download.js';
 
 // Re-export addLog so other modules can push entries to the ring buffer.
 export { addLog };
@@ -48,6 +49,7 @@ export async function buildServer(settings: HebSubSettings): Promise<FastifyInst
   await app.register(logsRoute);
   await app.register(searchRoute, { settings });
   await app.register(playRoute, { settings });
+  await app.register(downloadRoute, { settings });
 
   return app;
 }
