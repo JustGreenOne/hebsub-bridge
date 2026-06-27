@@ -80,4 +80,34 @@ describe('OpenSubtitlesProvider', () => {
     });
     expect(results).toEqual([]);
   });
+
+  it('sends Bearer token when login succeeds', async () => {
+    // First call: login → returns token
+    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ token: 'tok-abc' }) } as never);
+    // Second call: search
+    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => mockSearchResponse } as never);
+
+    const p = new OpenSubtitlesProvider('key', 'user@example.com', 'pass');
+    await p.search({ type: 'movie', language: 'heb' });
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    const searchCall = mockFetch.mock.calls[1];
+    const headers = (searchCall?.[1] as { headers?: Record<string, string> })?.headers ?? {};
+    expect(headers['Authorization']).toBe('Bearer tok-abc');
+  });
+
+  it('falls back to API-key-only when login fails', async () => {
+    // Login call fails
+    mockFetch.mockRejectedValueOnce(new Error('network error'));
+    // Search still proceeds
+    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => mockSearchResponse } as never);
+
+    const p = new OpenSubtitlesProvider('key', 'user@example.com', 'pass');
+    const results = await p.search({ type: 'movie', language: 'heb' });
+
+    expect(results).toHaveLength(1);
+    const searchCall = mockFetch.mock.calls[1];
+    const headers = (searchCall?.[1] as { headers?: Record<string, string> })?.headers ?? {};
+    expect(headers['Authorization']).toBeUndefined();
+  });
 });
