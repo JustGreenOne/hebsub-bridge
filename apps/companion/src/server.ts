@@ -4,6 +4,7 @@ import healthRoute from './api/health.js';
 import settingsRoute from './api/settings.js';
 import logsRoute, { addLog } from './api/logs.js';
 import searchRoute from './api/search.js';
+import playRoute from './api/play.js';
 
 // Re-export addLog so other modules can push entries to the ring buffer.
 export { addLog };
@@ -46,11 +47,7 @@ export async function buildServer(settings: HebSubSettings): Promise<FastifyInst
   await app.register(settingsRoute);
   await app.register(logsRoute);
   await app.register(searchRoute, { settings });
-
-  // Stub for /play — full implementation in a later task
-  app.post('/play', async (_req, reply) => {
-    return reply.code(501).send({ error: 'Not implemented' });
-  });
+  await app.register(playRoute, { settings });
 
   return app;
 }
