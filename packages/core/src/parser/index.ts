@@ -1,4 +1,3 @@
-import path from 'path';
 import { ParsedFilename } from '../types';
 
 const SERIES_RE = /[Ss](\d{1,2})[Ee](\d{1,2})/;
